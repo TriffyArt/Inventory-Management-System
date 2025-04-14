@@ -9,18 +9,20 @@ function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [scanLog, setScanLog] = useState([]);
+  const [scannedProduct, setScannedProduct] = useState(null); // New state for scanned product
 
   const fetchProducts = () => {
     setLoading(true);
     axios.get('http://localhost/server/api/products.php')
       .then(res => {
+        console.log('Products fetched:', res.data); // Debugging
         setProducts(res.data);
         const lowStock = res.data.filter(p => p.stock < 5);
         setAlert(lowStock.length ? `${lowStock.length} product(s) are low in stock.` : null);
         setError(null);
       })
       .catch(err => {
-        console.error(err);
+        console.error('Error fetching products:', err);
         setError("Failed to load products.");
       })
       .finally(() => setLoading(false));
@@ -28,59 +30,54 @@ function ProductsPage() {
 
   const fetchScanLogs = () => {
     axios.get('http://localhost/server/api/scanlog.php')
-      .then(res => setScanLog(res.data))
+      .then(res => {
+        console.log('Scan logs fetched:', res.data); // Debugging
+        setScanLog(res.data);
+      })
       .catch(err => console.error('Failed to load scan logs:', err));
   };
 
   useEffect(() => {
+    // Fetch products and scan logs initially
     fetchProducts();
     fetchScanLogs();
+
+    // Set up auto-refresh every 10 seconds
     const interval = setInterval(() => {
+      console.log('Auto-refreshing data...');
       fetchProducts();
       fetchScanLogs();
-    }, 10000);
+    }, 10000); // 10 seconds
+
+    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
   const handleScan = (barcode) => {
-    const timestamp = new Date().toLocaleString();
-    axios.post('http://localhost/server/api/scanlog.php', { barcode, timestamp })
-      .then(fetchScanLogs);
-
-    axios.get('http://localhost/server/api/products.php')
+    console.log('Scanned barcode:', barcode); // Debugging
+    axios.get(`http://localhost/server/api/products.php?barcode=${barcode}`)
       .then(res => {
-        const existing = res.data.find(p => p.barcode === barcode);
-        if (existing) {
-          const updated = { ...existing, stock: parseInt(existing.stock) + 1 };
-          axios.post('http://localhost/server/api/products.php', updated)
-            .then(() => {
-              alert('Existing product found. Stock updated.');
-              fetchProducts();
-            });
+        if (res.data && res.data.length > 0) {
+          setScannedProduct(res.data[0]); // Assuming the API returns an array
         } else {
-          const name = prompt('Enter product name for new barcode:');
-          if (!name) return;
-          const category = prompt('Enter product category:');
-          if (!category) return;
-          const warehouse = prompt('Enter warehouse name:');
-          if (!warehouse) return;
-
-          const newProduct = { name, category, stock: 1, warehouse, barcode };
-          axios.post('http://localhost/server/api/products.php', newProduct)
-            .then(() => {
-              alert('New product created.');
-              fetchProducts();
-            });
+          alert('Product not found for the scanned barcode.');
+          setScannedProduct(null);
         }
       })
-      .catch(err => console.error('Scan error:', err));
+      .catch(err => {
+        console.error('Error fetching product for scanned barcode:', err);
+        alert('Failed to fetch product details.');
+      });
   };
 
   const handleDelete = (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
-    axios.delete(`http://localhost/server/api/products.php/${id}`)
-      .then(() => fetchProducts())
-      .catch(err => console.error(err));
+    axios.delete(`http://localhost/server/api/products.php?id=${id}`) // Fixed query parameter
+      .then(() => {
+        alert('Product deleted successfully.');
+        fetchProducts();
+      })
+      .catch(err => console.error('Error deleting product:', err));
   };
 
   const handleEdit = (product) => {
@@ -97,7 +94,7 @@ function ProductsPage() {
           alert('Product updated.');
           fetchProducts();
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error('Error updating product:', err));
     }
   };
 
@@ -115,7 +112,7 @@ function ProductsPage() {
           alert('Product manually added.');
           fetchProducts();
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error('Error adding product manually:', err));
     }
   };
 
@@ -170,6 +167,17 @@ function ProductsPage() {
           <BarcodeScanner onScan={(text) => handleScan(text)} />
         )}
       </Suspense>
+
+      {scannedProduct && (
+        <div className="mt-4 p-4 border rounded bg-gray-100">
+          <h3 className="text-lg font-semibold">Scanned Product Details</h3>
+          <p><strong>Name:</strong> {scannedProduct.name}</p>
+          <p><strong>Category:</strong> {scannedProduct.category}</p>
+          <p><strong>Stock:</strong> {scannedProduct.stock}</p>
+          <p><strong>Warehouse:</strong> {scannedProduct.warehouse}</p>
+          <p><strong>Barcode:</strong> {scannedProduct.barcode}</p>
+        </div>
+      )}
 
       <div className="mt-8">
         <h4 className="text-lg font-semibold mb-2">Scan Log</h4>
