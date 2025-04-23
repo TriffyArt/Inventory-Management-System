@@ -42,12 +42,12 @@ function ProductsPage() {
     fetchProducts();
     fetchScanLogs();
 
-    // Set up auto-refresh every 10 seconds
+  // Set up interval for auto-refreshing data every 10 minutes
     const interval = setInterval(() => {
       console.log('Auto-refreshing data...');
       fetchProducts();
       fetchScanLogs();
-    }, 10000); // 10 seconds
+    }, 600000); 
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
@@ -182,7 +182,7 @@ function ProductsPage() {
       <div className="mt-8">
         <h4 className="text-lg font-semibold mb-2">Scan Log</h4>
         <ul className="text-sm text-gray-700 space-y-1 max-h-48 overflow-auto border p-2 bg-white rounded">
-          {scanLog.map((log, index) => (
+          {Array.isArray(scanLog) && scanLog.map((log, index) => (
             <li key={index}>
               <span className="font-mono">{log.barcode}</span> scanned at {log.timestamp}
             </li>
