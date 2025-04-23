@@ -42,7 +42,7 @@ function ProductsPage() {
     fetchProducts();
     fetchScanLogs();
 
-  // Set up interval for auto-refreshing data every 10 minutes
+    // Set up auto-refresh every 10 seconds
     const interval = setInterval(() => {
       console.log('Auto-refreshing data...');
       fetchProducts();
