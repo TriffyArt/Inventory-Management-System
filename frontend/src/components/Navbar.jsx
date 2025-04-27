@@ -18,10 +18,6 @@ const Navbar = () => {
                             <li className="text-black transition-transform duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-110">
                                 <Link to='/admin/products' className="hover:text-black">Products</Link>
                             </li>
-    
-                            <li className="text-black transition-transform duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-110">
-                                <Link to='/admin/warehouses' className="hover:text-black">Warehouse</Link>
-                            </li>
                         </ul>
     
                         <button className="font-bold text-black rounded-lg text-sm bg-gray-100 w-20 py-1 border-1 black cursor-pointer

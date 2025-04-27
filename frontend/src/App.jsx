@@ -12,7 +12,6 @@ import AdminLogin from './login/admin/AdminLogin';
 import AdminLayout from './login/admin/AdminLayout';
 import Dashboard from './pages/Dashboard';
 import ProductsPage from './pages/ProductsPage';
-import WarehousesPage from './pages/WarehousesPage';
 
 import UserLayout from './login/user/UserLayout';
 import UserLogin from './login/user/UserLogin';
@@ -40,7 +39,6 @@ function App() {
         <Route path="/admin" element={<AdminLayout/>}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<ProductsPage />} />
-          <Route path="warehouses" element={<WarehousesPage />} />
         </Route>
 
         <Route path="/user" element={<UserLayout/>}>
