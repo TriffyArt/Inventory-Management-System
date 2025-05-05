@@ -50,7 +50,7 @@ function ProductsPage() {
     const interval = setInterval(() => {
       fetchProducts();
       fetchScanLogs();
-    }, 600000);
+    }, 60000); // Refresh every 60 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -106,8 +106,8 @@ function ProductsPage() {
     }
     const payload = { name, category, stock: parseInt(stock), barcode };
     const request = formType === 'edit'
-      ? axios.post('http://localhost/server/api/products.php', { ...payload, id })
-      : axios.post('http://localhost/server/api/products.php', payload);
+      ? axios.post('http://localhost/server/api/products.php?action=update', { ...payload, id })
+      : axios.post('http://localhost/server/api/products.php?action=add', payload);
 
     request
       .then(() => {

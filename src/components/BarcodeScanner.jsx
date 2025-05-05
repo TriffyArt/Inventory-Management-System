@@ -7,7 +7,7 @@ const BarcodeScanner = ({ onScan }) => {
   useEffect(() => {
     if (!scannerRef.current) {
       scannerRef.current = new Html5QrcodeScanner('reader', {
-        fps: 10,
+        fps: 5,
         qrbox: { width: 200, height: 200 },
         disableFlip: false,
         rememberLastUsedCamera: true
@@ -15,8 +15,8 @@ const BarcodeScanner = ({ onScan }) => {
 
       scannerRef.current.render(handleSuccess, handleError);
     }
-
-    return () => {
+    // Cleanup function to stop the scanner
+    return () => { 
       if (scannerRef.current) {
         scannerRef.current.clear().catch(console.error);
         scannerRef.current = null;
@@ -25,7 +25,7 @@ const BarcodeScanner = ({ onScan }) => {
   }, []);
 
   const handleSuccess = (decodedText) => {
-    const beep = new Audio('/beepp.mp3'); // Place `beep.mp3` in your public folder
+    const beep = new Audio('/beep.mp3');
     beep.play();
     onScan(decodedText);
   };
