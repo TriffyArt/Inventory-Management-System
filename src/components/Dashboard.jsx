@@ -1,0 +1,62 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const Dashboard = () => {
+  const [lowStockCount, setLowStockCount] = useState(0);
+  const [productStats, setProductStats] = useState({ total_products: 0, low_stock_products: 0 });
+  const [recentProducts, setRecentProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost/server/api/products.php?action=low_stock_warning')
+      .then(res => setLowStockCount(res.data.low_stock_count || 0))
+      .catch(err => console.error('Low Stock Fetch Error:', err));
+
+    axios.get('http://localhost/server/api/products.php?action=product_stats')
+      .then(res => setProductStats(res.data))
+      .catch(err => console.error('Product Stats Error:', err));
+
+    axios.get('http://localhost/server/api/products.php?action=recently_added')
+      .then(res => {
+        if (Array.isArray(res.data)) {
+          setRecentProducts(res.data);
+        } else {
+          console.error("Expected array but got", typeof res.data);
+        }
+      })
+      .catch(err => console.error('Recently Added Error:', err));
+  }, []);
+
+  return (
+    <div className="mx-20 h-auto w-auto border-2 black rounded-xl bg-gray-400 bg-gradient-to-b from-white via-gray-300 to-gray-400 p-10">
+
+      <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="bg-white border-2 black rounded-xl p-6 shadow">
+          <h3 className="text-center text-lg font-semibold mb-2">Low Stocks Warning Display</h3>
+          <p className="text-center text-2xl font-bold text-red-600">{lowStockCount} low products</p>
+        </div>
+
+        <div className="bg-white border-2 black rounded-xl p-6 shadow">
+          <h3 className="text-lg font-semibold mb-2">Total Products</h3>
+          <p className="text-xl text-green-400">{productStats.total_products}</p>
+          <h3 className="text-lg font-semibold mt-4">Total Low Stock Products</h3>
+          <p className="text-xl text-yellow-400">{productStats.low_stock_products}</p>
+        </div>
+      </div>
+
+      <div className="bg-white border-2 black rounded-xl p-6 shadow h-64 overflow-y-auto">
+        <h3 className="text-lg font-semibold mb-4">Recently Added Products</h3>
+        <ul className="space-y-2 text-gray-800">
+          {recentProducts.length === 0 ? (
+            <li>No recent products</li>
+          ) : (
+            recentProducts.map((product, index) => (
+              <li key={index}>• {product.name || product}</li>
+            ))
+          )}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

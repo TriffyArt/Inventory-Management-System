@@ -1,25 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Navigation from './navigation/LandingNavigation';
-import Home from './landingPages/Home';
-import Features from './landingPages/Features';
-import Solution from './landingPages/Solution';
-import Developers from './landingPages/Developers';
+import Navigation from './components/LandingNavigation';
+import Home from './components/Home';
+import Features from './components/Features';
+import Solution from './components/Solution';
+import Developers from './components/Developers';
 
-import Login from './login/LoginInterface';
+import LoginInterface from './components/LoginInterface';
 
-import AdminLogin from './login/admin/AdminLogin';
-import AdminLayout from './login/admin/AdminLayout';
-import Dashboard from './pages/Dashboard';
-import ProductsPage from './pages/ProductsPage';
-
-import UserLayout from './login/user/UserLayout';
-import UserLogin from './login/user/UserLogin';
-import UserDashboard from './components/UserDashboard';
-import UserProductsPage from './components/UserProducsPage';
-import UserScanner from './components/UserScanner';
-
-
+import AdminLogin from './components/admin/AdminLogin';
+import AdminLayout from './components/admin/AdminLayout';
+import Dashboard from './components/Dashboard';
+import ProductsPage from './components/ProductsPage';
 
 function App() {
   return (
@@ -32,19 +24,12 @@ function App() {
           <Route path="solution" element={<Solution />} />
           <Route path="developers" element={<Developers />} />
           <Route path="admin-login" element={<AdminLogin />} />
-          <Route path="user-login" element={<UserLogin />} />
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<LoginInterface />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout/>}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<ProductsPage />} />
-        </Route>
-
-        <Route path="/user" element={<UserLayout/>}>
-          <Route index element={<UserDashboard />} />
-          <Route path="products" element={<UserProductsPage />} />
-          <Route path="scanner" element={<UserScanner />} />
         </Route>
       </Routes>
 

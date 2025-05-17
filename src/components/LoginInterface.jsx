@@ -7,18 +7,13 @@ const LoginInterface = () => {
           bg-gradient-to-b from-white via-gray-300 to-gray-400 font-serif">
 
             <h1 className="font-semibold text-3xl pb-10">
-                Select Login Type
+                Login
             </h1>
             
             <div className="flex flex-row text-center w-auto">
                 <div onClick={() => navigate('/admin-login')} className="bg-white border-2 p-18 mx-2 rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform duration-300">
                     <img src="/admin.png" alt="Admin Icon" className="h-auto w-30" />
                     <h1 className="font-semibold text-2xl">Admin</h1>
-                </div>
-
-                <div onClick={() => navigate('/user-login')} className="bg-white border-2 p-18 mx-2 rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform duration-300">
-                    <img src="/user.png" alt="Admin Icon" className="h-auto w-30" />
-                    <h1 className="font-semibold text-2xl">User</h1>
                 </div>
             </div>
 

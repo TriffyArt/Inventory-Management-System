@@ -6,13 +6,32 @@ header("Content-Type: application/json");
 
 $mysqli = new mysqli("localhost", "root", "", "inventory_db");
 
-if ($mysqli->connect_error) {
-  http_response_code(500);
-  echo json_encode(["error" => "Database connection failed: " . $mysqli->connect_error]);
-  exit;
+if ($_GET['action'] == 'low_stock_warning') {
+    $res = $mysqli->query("SELECT COUNT(*) AS low_stock_count FROM products WHERE stock < 5");
+    $data = $res->fetch_assoc();
+    echo json_encode($data);
+    exit;
 }
 
-// Handle preflight request for CORS
+if ($_GET['action'] == 'product_stats') {
+    $res = $mysqli->query("SELECT 
+        (SELECT COUNT(*) FROM products) AS total_products,
+        (SELECT COUNT(*) FROM products WHERE stock < 5) AS low_stock_products");
+    $data = $res->fetch_assoc();
+    echo json_encode($data);
+    exit;
+}
+
+if ($_GET['action'] == 'recently_added') {
+    $res = $mysqli->query("SELECT name FROM products ORDER BY id DESC LIMIT 10");
+    $data = [];
+    while ($row = $res->fetch_assoc()) {
+        $data[] = $row;
+    }
+    echo json_encode($data);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
