@@ -25,7 +25,7 @@ const BarcodeScanner = ({ onScan }) => {
   }, []);
 
   const handleSuccess = (decodedText) => {
-    const beep = new Audio('/beep.mp3');
+    const beep = new Audio('/beepp.mp3');
     beep.play();
     onScan(decodedText);
   };

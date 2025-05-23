@@ -41,6 +41,10 @@ const Dashboard = () => {
       .catch(err => console.error('Recently Added Error:', err));
   }, []);
 
+  const handleEditProduct = (product) => {
+    alert(`Edit product: ${product.name}`);
+  };
+
   return (
     <div className="mx-20 h-auto w-auto border-2 black rounded-xl bg-gray-400 bg-gradient-to-b from-white via-gray-300 to-gray-400 p-10">
 
@@ -89,6 +93,7 @@ const Dashboard = () => {
                     <th className="border px-2 py-1">Name</th>
                     <th className="border px-2 py-1">Category</th>
                     <th className="border px-2 py-1">Stock</th>
+                    <th className="border px-2 py-1">Actions</th> {/* Add Actions column */}
                   </tr>
                 </thead>
                 <tbody>
@@ -97,6 +102,14 @@ const Dashboard = () => {
                       <td className="border px-2 py-1 font-semibold">{product.name}</td>
                       <td className="border px-2 py-1">{product.category}</td>
                       <td className="border px-2 py-1 text-red-600 font-bold">{product.stock}</td>
+                      <td className="border px-2 py-1">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs"
+                          onClick={() => handleEditProduct(product)}
+                        >
+                          Edit
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

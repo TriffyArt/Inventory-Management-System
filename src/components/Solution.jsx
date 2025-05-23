@@ -25,9 +25,6 @@ const Solution = () => {
               <strong>QR Code Scanning:</strong> Each product has a unique QR code. Using any device with a camera, users can scan the code to instantly retrieve and display detailed product information such as name, description, stock levels, and location.
             </li>
             <li>
-              <strong>Multi-Device Tracking:</strong> Inventory data is synchronized across multiple devices, allowing managers and staff to track product quantities and updates from anywhere, whether on mobile devices or desktops.
-            </li>
-            <li>
               <strong>Real-Time Updates:</strong> Changes made on one device (such as stock adjustments, new product entries, or product removals) are propagated instantly to all connected devices, ensuring everyone works with the latest data.
             </li>
             <li>
